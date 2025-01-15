@@ -5,6 +5,7 @@ metadata:
   labels:
     app: mysql
 spec:
+  type: ClusterIP
   clusterIP: NONE
   ports:
     - protocol: TCP
