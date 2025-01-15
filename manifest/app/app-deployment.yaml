@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: test-app
-          image: joe1534/app-with-argocd:14b0ef7411df79c6e49fbf8d4785a43ce6cc4ba6
+          image: joe1534/app-with-argocd:b0a586c45e96317d588c53d24ffe3fa8154e53ce
           ports:
             - name: http
               containerPort: 8080
