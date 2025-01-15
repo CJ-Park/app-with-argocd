@@ -57,6 +57,12 @@ jobs:
           push: true
           platforms: linux/arm64,linux/amd64 # 다중 플랫폼 설정
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOKERHUB_REPOSITORY }}:${{ github.sha }}
+
+    outputs:
+      docker_repo: ${{ secrets.DOKERHUB_REPOSITORY }}
+      docker_username: ${{ secrets.DOCKERHUB_USERNAME }}
+      image_tag: ${{ github.sha }}
+
   argocd:
     runs-on: ubuntu-latest
 
@@ -70,15 +76,15 @@ jobs:
 
       - name: Set up Image
         run: |
-          IMAGE_TAG="${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPOSITORY }}:${{ github.sha }}"
+          IMAGE_TAG="${{ needs.ci.outputs.docker_username }}/${{ needs.ci.outputs.docker_repo }}:${{ needs.ci.outputs.image_tag }}"
           
           # Debugging: Print out the variables
           echo "IMAGE_TAG=$IMAGE_TAG"
-          echo "DOCKER_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}"
-          echo "DOCKER_REPO=${{ secrets.DOCKERHUB_REPOSITORY }}"
-
+          echo "DOCKER_USERNAME=${{ needs.ci.outputs.docker_username }}"
+          echo "DOCKER_REPO=${{ needs.ci.outputs.docker_repo }}"
+          
           # Modify the deployment.yaml file with the new image tag
-          sed -i "s%image: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPOSITORY }}:.*%image: $IMAGE_TAG%" manifest/app/app-deployment.yaml
+          sed -i "s%image: ${{ needs.ci.outputs.docker_username }}/${{ needs.ci.outputs.docker_repo }}:.*%image: $IMAGE_TAG%" manifest/app/app-deployment.yaml
 
       - name: Commit and push changes
         run: |
