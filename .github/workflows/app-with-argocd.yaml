@@ -72,16 +72,20 @@ jobs:
         run: |
           IMAGE_TAG="${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPOSITORY }}:${{ github.sha }}"
           DOCKER_USERNAME="${{ secrets.DOCKERHUB_USERNAME }}"
-          DOCKER_REPO="${{ secrets.DOCKERHUB_REPOSITORY }}"
+          DOCKER_REPOSITORY="${{ secrets.DOCKERHUB_REPOSITORY }}"
 
           # Modify the deployment.yaml file with the new image tag
-          sed -i "s%image: $DOCKER_USERNAME/$DOCKER_REPO:.*%image: $IMAGE_TAG%" ./manifest/app/app-deployment.yaml
-
+          sed -i "s%image: $DOCKER_USERNAME/$DOCKER_REPOSITORY:.*%image: $IMAGE_TAG%" ./manifest/app/app-deployment.yaml
+          
+          # Check the diff to ensure changes were made
+          git diff
 
       - name: Commit and push changes
         run: |
           git config --local user.email "king01286@naver.com"
           git config --local user.name "CJ-Park"
+          # Check if there are any changes
+          git status
           git add .
           git commit -m "Update manifest deployment yaml file for argoCD"
           git push
