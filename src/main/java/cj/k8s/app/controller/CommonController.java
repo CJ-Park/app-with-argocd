@@ -8,6 +8,6 @@ public class CommonController {
 
     @GetMapping("/api/status")
     public String healthCheck() {
-        return "Argo CD test";
+        return "Argo CD test - 2";
     }
 }
