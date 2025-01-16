@@ -1,7 +1,11 @@
 name: k8s test app with Github actions & Docker CI & ArgoCD
 
 on:
-  workflow_dispatch
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'manifest/**'
 
 jobs:
   ci:
